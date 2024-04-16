@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    FILE *inputFile = fopen("input.txt", "r");
+    if (inputFile == NULL) {
+        printf("Failed to open input file.\n");
+        return 0;
+    }
+    int num;
+    int count = 0;
+    while (fscanf(inputFile, "%d", &num) != EOF) {
+        count++;
+    }
+    int *numbers = (int *)malloc(count * sizeof(int));
+    if (numbers == NULL) {
+        printf("Memory allocation failed.\n");
+        fclose(inputFile);
+    }
+    rewind(inputFile);
+    int index = 0;
+    while (fscanf(inputFile, "%d", &num) != EOF) {
+        numbers[index++] = num;
+    }
+    fclose(inputFile);
+    bubbleSort(numbers, count);
+    FILE *outputFile = fopen("output.txt", "w");
+    if (outputFile == NULL) {
+        printf("Failed to open output file.\n");
+        free(numbers);
+    }
+
+    for (int i = 0; i < count; i++) {
+        fprintf(outputFile, "%d ", numbers[i]);
+    }
+    fclose(outputFile);
+    free(numbers);
+    printf("Numbers sorted and written to output.txt successfully.\n");
+
+    return 0;
+}
