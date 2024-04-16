@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+int binarySearch(int arr[], int low, int high, int key) {
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (arr[mid] == key) {
+            return mid;
+        }
+        if (arr[mid] < key) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    return -1;
+}
+
+int main() {
+    FILE *inputFile = fopen("input.txt", "r");
+    if (inputFile == NULL) {
+        printf("Failed to open input file.\n");
+        return 1;
+    }
+    int num;
+    int count = 0;
+    while (fscanf(inputFile, "%d", &num) != EOF) {
+        count++;
+    }
+    int *numbers = (int *)malloc(count * sizeof(int));
+    if (numbers == NULL) {
+        printf("Memory allocation failed.\n");
+        fclose(inputFile);
+        return 1;
+    }
+    rewind(inputFile);
+    int index = 0;
+    while (fscanf(inputFile, "%d", &num) != EOF) {
+        numbers[index++] = num;
+    }
+    fclose(inputFile);
+    bubbleSort(numbers, count);
+    int key;
+    printf("Enter the element to search: ");
+    scanf("%d", &key);
+    int result = binarySearch(numbers, 0, count - 1, key);
+    if (result != -1) {
+        printf("Element %d found at index %d.\n", key, result);
+    } else {
+        printf("Element %d not found in the array.\n", key);
+    }
+    free(numbers);
+
+    return 0;
+}
